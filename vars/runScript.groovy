@@ -1,24 +1,17 @@
-// def patch(String template, Map context) {
-//     template.replaceAll(/@(\w+)@/) {_,key -> context[key]}
-// }
 
 @NonCPS
 String patch(String template, Map context) {
+    //https://stackoverflow.com/questions/42295921/what-is-the-effect-of-noncps-in-a-jenkins-pipeline-script
+    //https://stackoverflow.com/questions/59928804/groovy-vs-jenkins-regex-replacefirst-replaceall-function-with-closure-works-di
     def pattern = /\@(\w+)\@/
     Closure replacement = {_,key -> context[key]}
-    String scriptText = template.replaceAll(pattern, replacement) 
+    String scriptText   = template.replaceAll(pattern, replacement) 
     return scriptText
 }
 
-
 def call(Map params = [:]) {
-    echo "groovy.version: ${GroovySystem.version}"
-
     def name = params.name ?: 'run-script'
     def cmd  = params.cmd  ?: 'ls -lhFA .'
-
-    // def tmpl = libraryResource 'ribomation/run_script/script.tmpl.sh' 
-    // if (!tmpl) { throw new RuntimeException('template file was empty') }
 
     def tmpl = '''
         #!/usr/bin/env bash
@@ -35,12 +28,12 @@ def call(Map params = [:]) {
         '''.stripIndent().trim()
 
     def ctx  = [NAME:name, CMD:cmd]
-    echo "ctx: ${ctx}"
+    // echo "ctx: ${ctx}"
 
     def scriptText = patch(tmpl, ctx)
-    echo '--script--'
-    echo scriptText
-    echo '--end script--'
+    // echo '--script--'
+    // echo scriptText
+    // echo '--end script--'
     
     def dir = "./TMP.${name}.${System.nanoTime()}"
     writeFile file:"${dir}/cmd.sh", text:scriptText
@@ -50,10 +43,10 @@ def call(Map params = [:]) {
     writeFile file:"${dir}/README.txt", text:'Temp-dir created for invocation of runScript'
     
     sh "chmod a+x ${dir}/cmd.sh"
-    sh "ls -lhFA ${dir}"
+    // sh "ls -lhFA ${dir}"
     
     def SH_CMD = "${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo \$? >${dir}/exit.txt"
-    echo 'SH_CMD: "' + SH_CMD + '"'
+    // echo 'SH_CMD: "' + SH_CMD + '"'
     sh SH_CMD
 
     def result  = [:]
