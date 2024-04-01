@@ -1,17 +1,22 @@
-def patch(String template, Map context) {
-    template.replaceAll(/@(\w+)@/) {_,key -> context[key]}
-}
+// def patch(String template, Map context) {
+//     template.replaceAll(/@(\w+)@/) {_,key -> context[key]}
+// }
 
 def call(Map params = [:]) {
     def name = params.name ?: 'run-script'
     def cmd  = params.cmd  ?: 'ls -lhFA .'
     def ctx  = [NAME:name, CMD:cmd]
-    
+
     def tmpl = libraryResource 'ribomation/run_script/script.tmpl.sh' 
     if (!tmpl) { throw new RuntimeException('template file was empty') }
+
+    def scriptText = tmpl.replaceAll(/@(\w+)@/) {_,key -> ctx[key]}
+    echo '--script--'
+    echo scriptText
+    echo '--end script--'
     
     def dir = "./TMP.${name}.${System.nanoTime()}"
-    writeFile file:"${dir}/cmd.sh", text:patch(tmpl, ctx)
+    writeFile file:"${dir}/cmd.sh", text:scriptText
     writeFile file:"${dir}/stdout.txt", text:''
     writeFile file:"${dir}/stderr.txt", text:''
     writeFile file:"${dir}/exit.txt", text:''
