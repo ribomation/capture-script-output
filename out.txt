@@ -1,5 +1,0 @@
-commit 7c322ce0cc0b211b73f34ac3e1d6f487619ca6d4
-Author: Jens Riboe <jens.riboe@ribomation.se>
-Date:   Mon Apr 1 13:27:04 2024 +0200
-
-    initial commit
