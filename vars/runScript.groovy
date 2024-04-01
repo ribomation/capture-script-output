@@ -23,12 +23,12 @@ def call(Map params = [:]) {
         echo "directory: $PWD"
         echo "script   : @NAME@"
         @CMD@
-    '''.stripIndent().trim()
+        '''.stripIndent().trim()
 
     def ctx  = [NAME:name, CMD:cmd]
     echo "ctx: ${ctx}"
-    
-    def scriptText = tmpl.replaceAll(/@(\w+)@/) {_,key -> ctx[key]}
+
+    def scriptText = tmpl.replaceAll(/\@(\w+)\@/) {_,key -> ctx[key]}
     echo '--script--'
     echo scriptText
     echo '--end script--'
