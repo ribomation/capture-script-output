@@ -8,7 +8,7 @@ def call(Map params = [:]) {
     def ctx  = [NAME:name, CMD:cmd]
     def tmpl = libraryResource 'runScript.tmpl.sh'
     
-    def dir = "TMP.${name}.${System.nanoTime()}"
+    def dir = "./TMP.${name}.${System.nanoTime()}"
     writeFile file:"${dir}/cmd.sh", text:patch(tmpl, ctx)
     writeFile file:"${dir}/stdout.txt", text:''
     writeFile file:"${dir}/stderr.txt", text:''
@@ -18,9 +18,9 @@ def call(Map params = [:]) {
     sh "chmod a+x ${dir}/cmd.sh"
     sh "ls -lhFA ${dir}"
     
-    def SH_CMD = "${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo $? >${dir}/exit.txt"
-    echo 'SH_CMD: ' + SH_CMD
-    sh SH_CMD
+    def SH_CMD = "${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo \$? >${dir}/exit.txt"
+    echo 'SH_CMD: "' + SH_CMD + '"'
+    //sh SH_CMD
 
     def result  = [:]
     result.out  = readFile "${dir}/stdout.txt"
