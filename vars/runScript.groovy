@@ -1,4 +1,3 @@
-
 def patch(String template, Map context) {
     template.replaceAll(/@(\w+)@/) {_,key -> context[key]}
 }
@@ -17,9 +16,11 @@ def call(Map params = [:]) {
     writeFile file:"${dir}/README.txt", text:'Temp-dir created for invocation of runScript'
     
     sh "chmod a+x ${dir}/cmd.sh"
-    sh """
-        ${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo $? >${dir}/exit.txt
-    """.stripIndent().trim()
+    sh "ls -lhFA ${dir}"
+    
+    def SH_CMD = "${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo $? >${dir}/exit.txt"
+    echo 'SH_CMD: ' + SH_CMD
+    sh SH_CMD
 
     def result  = [:]
     result.out  = readFile "${dir}/stdout.txt"
@@ -29,4 +30,3 @@ def call(Map params = [:]) {
 
     return result
 }
-
