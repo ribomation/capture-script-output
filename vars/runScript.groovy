@@ -6,7 +6,9 @@ def call(Map params = [:]) {
     def name = params.name ?: 'run-script'
     def cmd  = params.cmd  ?: 'ls -lhFA .'
     def ctx  = [NAME:name, CMD:cmd]
-    def tmpl = libraryResource 'runScript.tmpl.sh'
+    
+    def tmpl = libraryResource 'ribomation/run_script/script.tmpl.sh' 
+    if (!tmpl) { throw new RuntimeException('template file was empty') }
     
     def dir = "./TMP.${name}.${System.nanoTime()}"
     writeFile file:"${dir}/cmd.sh", text:patch(tmpl, ctx)
