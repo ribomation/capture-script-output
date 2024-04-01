@@ -20,7 +20,7 @@ def call(Map params = [:]) {
     
     def SH_CMD = "${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo \$? >${dir}/exit.txt"
     echo 'SH_CMD: "' + SH_CMD + '"'
-    //sh SH_CMD
+    sh SH_CMD
 
     def result  = [:]
     result.out  = readFile "${dir}/stdout.txt"
