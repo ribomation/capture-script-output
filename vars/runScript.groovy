@@ -3,7 +3,7 @@
 // }
 
 
-
+@NonCPS
 def call(Map params = [:]) {
     echo "groovy.version: ${GroovySystem.version}"
 
