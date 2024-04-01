@@ -2,14 +2,32 @@
 //     template.replaceAll(/@(\w+)@/) {_,key -> context[key]}
 // }
 
+
+
 def call(Map params = [:]) {
     def name = params.name ?: 'run-script'
     def cmd  = params.cmd  ?: 'ls -lhFA .'
+
+    // def tmpl = libraryResource 'ribomation/run_script/script.tmpl.sh' 
+    // if (!tmpl) { throw new RuntimeException('template file was empty') }
+
+    def tmpl = '''
+        #!/usr/bin/env bash
+        set -e            #stop at first error (non-zero exit code)
+        set -u            #stop if using undef variable
+        set -x            #echo all commands
+        set -o pipefail   #set exit code to first failed cmd in a pipe
+
+        TS=`date --iso-8601=ns`
+        echo "timestamp: $TS"
+        echo "directory: $PWD"
+        echo "script   : @NAME@"
+        @CMD@
+    '''.stripIndent().trim()
+
     def ctx  = [NAME:name, CMD:cmd]
-
-    def tmpl = libraryResource 'ribomation/run_script/script.tmpl.sh' 
-    if (!tmpl) { throw new RuntimeException('template file was empty') }
-
+    echo "ctx: ${ctx}"
+    
     def scriptText = tmpl.replaceAll(/@(\w+)@/) {_,key -> ctx[key]}
     echo '--script--'
     echo scriptText
