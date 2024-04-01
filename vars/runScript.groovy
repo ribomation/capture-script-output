@@ -60,7 +60,7 @@ def call(Map params = [:]) {
     result.out  = readFile "${dir}/stdout.txt"
     result.err  = readFile "${dir}/stderr.txt"
     result.exit = readFile "${dir}/exit.txt"
-    result.ok   = result.exit == '0' && result.err.trim().isEmpty()
+    result.ok   = result.exit == '0'
 
     return result
 }
