@@ -2,8 +2,15 @@
 //     template.replaceAll(/@(\w+)@/) {_,key -> context[key]}
 // }
 
-
 @NonCPS
+String patch(String template, Map context) {
+    def pattern = /\@(\w+)\@/
+    Closure replacement = {_,key -> context[key]}
+    String scriptText = template.replaceAll(pattern, replacement) 
+    return scriptText
+}
+
+
 def call(Map params = [:]) {
     echo "groovy.version: ${GroovySystem.version}"
 
@@ -30,9 +37,7 @@ def call(Map params = [:]) {
     def ctx  = [NAME:name, CMD:cmd]
     echo "ctx: ${ctx}"
 
-    def pattern = /\@(\w+)\@/
-    Closure replacement = {_,key -> ctx[key]}
-    String scriptText = tmpl.replaceAll(pattern, replacement) 
+    def scriptText = patch(tmpl, ctx)
     echo '--script--'
     echo scriptText
     echo '--end script--'
