@@ -5,6 +5,8 @@
 
 
 def call(Map params = [:]) {
+    echo "groovy.version: ${GroovySystem.version}"
+
     def name = params.name ?: 'run-script'
     def cmd  = params.cmd  ?: 'ls -lhFA .'
 
