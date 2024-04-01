@@ -30,7 +30,7 @@ def call(Map params = [:]) {
     def ctx  = [NAME:name, CMD:cmd]
     echo "ctx: ${ctx}"
 
-    Pattern pattern = /\@(\w+)\@/
+    def pattern = /\@(\w+)\@/
     Closure replacement = {_,key -> ctx[key]}
     String scriptText = tmpl.replaceAll(pattern, replacement) 
     echo '--script--'
