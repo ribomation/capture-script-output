@@ -27,7 +27,7 @@ def call(Map params = [:]) {
         '''.stripIndent().trim()
     def scriptText = patch(template, context)
     
-    def dir = "./TMP.${name}.${System.nanoTime()}"
+    def dir = "./tmp.${context.NAME}.${System.nanoTime()}"
     writeFile file:"${dir}/cmd.sh",     text:scriptText
     writeFile file:"${dir}/stdout.txt", text:''
     writeFile file:"${dir}/stderr.txt", text:''
