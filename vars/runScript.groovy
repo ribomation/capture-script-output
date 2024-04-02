@@ -35,7 +35,7 @@ def call(Map params = [:]) {
     writeFile file:"${dir}/README.txt", text:'Temp-dir for runScript'
     
     sh "chmod a+x ${dir}/cmd.sh"
-    def cmdLine = "${dir}/cmd.sh 2>${dir}/stderr.txt 1>${dir}/stdout.txt; echo \$? >${dir}/exit.txt"
+    def cmdLine = """ (cd ${dir}; ./cmd.sh 2>./stderr.txt 1>./stdout.txt; echo \$? >./exit.txt) """
     sh cmdLine
 
     def result  = [:]
